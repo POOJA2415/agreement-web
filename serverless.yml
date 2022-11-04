@@ -1,0 +1,111 @@
+service: Agreement-web-${env:DEPLOYMENT_NAME}
+useDotenv: true
+provider:
+  name: aws
+  stage: dev
+  region: us-east-2
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  DOMAIN_PREFIX: ${env:DOMAIN_PREFIX}
+  s3Sync:
+    - bucketName: ${env:DOMAIN_PREFIX}
+      localDir: ${env:STATIC_FILES_DIR} # local directory where static files are present
+      
+ 
+resources:
+  Resources:
+    WebAppS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${env:DOMAIN_PREFIX}
+    WebAppS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      DependsOn:
+        - WebAppS3Bucket
+      Properties:
+        Bucket:
+          Ref: WebAppS3Bucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: "Allow"
+              Action:
+                - "s3:GetObject"
+              Resource:
+                Fn::Join: ["", ["arn:aws:s3:::", { "Ref": "WebAppS3Bucket" }, "/*"]]
+              Principal: "*"
+    CloudFrontOriginAccessIdentity:
+      Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: "${self:service}-oai"
+    # cloudfront configuration
+    WebAppCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      DependsOn:
+        - WebAppS3Bucket
+        # - HostedZone
+        - CloudFrontOriginAccessIdentity
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName:
+                Fn::Join: ["", [{ "Ref": "WebAppS3Bucket" }, ".s3.", { "Ref": "AWS::Region" }, ".amazonaws.com"]]
+              OriginPath: ""
+              Id: ${self:custom.DOMAIN_PREFIX}-ui
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  Fn::Join: ["", ["origin-access-identity/cloudfront/", { "Ref": "CloudFrontOriginAccessIdentity" }]]
+        
+          Enabled: "true"
+          # Alternate domain name (CNAME) : it can be multiple
+          # Aliases:
+          #   - ${self:custom.siteName}
+          DefaultRootObject: index.html
+          ## Since the Single Page App is taking care of the routing we need to make sure ever path is served with index.html
+          ## The only exception are files that actually exist e.h. app.js, reset.css
+          CustomErrorResponses:
+            - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+          # origin behavior
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            ## The origin id defined above
+            TargetOriginId: ${self:custom.DOMAIN_PREFIX}-ui
+            ## Defining if and how the QueryString and Cookies are forwarded to the origin which in this case is S3
+            ForwardedValues:
+              QueryString: "false"
+              Cookies:
+                Forward: none
+            ## The protocol that users can use to access the files in the origin. To allow HTTP use `allow-all`
+            # redirects http to https
+            ViewerProtocolPolicy: redirect-to-https
+            
+        
+              
+          ## The certificate to use when viewers use HTTPS to request objects.
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: "true"
+            # MinimumProtocolVersion: TLSv1.2_2021
+            # SslSupportMethod: sni-only
+         
+  ## In order to print out the hosted domain via `serverless info` we need to define the DomainName output for CloudFormation
+  Outputs:
+    WebAppS3BucketOutput:
+      Value:
+        "Ref": WebAppS3Bucket
+    WebAppCloudFrontDistributionOutput:
+      Value:
+        "Fn::GetAtt": [WebAppCloudFrontDistribution, DomainName]

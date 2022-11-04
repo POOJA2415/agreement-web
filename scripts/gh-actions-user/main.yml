@@ -1,0 +1,238 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  This template creates IAM resources to allow GitHub actions to deploy ${ProjectName}-DR.Ruchi
+Parameters:
+  LambdaService:
+    Description: Name of Lambda Service
+    Type: String
+
+  # HostedZoneId:
+  #   AllowedPattern: '[A-Za-z0-9]+'
+  #   Description: ID of the hosted zone to grant permissions 
+  #   Type: String
+
+  ExternalId:
+    Description: External ID to verify assume role requestor
+    Type: String
+
+  ProjectName:
+    Description: Project or repository name used to identify created AWS resources
+    Type: String
+
+Resources:
+  LambdaServicePolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: !Sub Assets upload policy for ${ProjectName} project
+      ManagedPolicyName: !Sub ${ProjectName}-assets-policy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DeployCloudfrontDistribution
+            Effect: Allow
+            Action:
+              - cloudfront:*
+            Resource:
+              - !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+              - !Sub "arn:aws:cloudfront::${AWS::AccountId}:origin-access-identity/*"
+              - !Sub "arn:aws:cloudfront::${AWS::AccountId}:streaming-distribution/*"
+
+          # DeployAppBuckets
+          - Sid: DeployLambdaSourceMapping
+            Effect: Allow
+            Action:
+              - cloudfront:CreateCloudFrontOriginAccessIdentity
+              - cloudfront:TagResource
+              - cloudfront:CreateDistribution
+              - cloudfront:DeleteDistribution
+              - cloudfront:DeleteCloudFrontOriginAccessIdentity
+              - cloudfront:UpdateCloudFrontOriginAccessIdentity
+              - cloudfront:UpdateDistribution
+
+            Resource:
+              - "*"
+
+          - Sid: ListAllBucketPermissions
+            Effect: Allow
+            Action:
+              - s3:ListAllMyBuckets
+              - s3:ListBucket
+              - s3:CreateBucket
+              - s3:DeleteBucket
+              - s3:PutObject
+              - s3:DeleteObject
+              - s3:PutBucketPolicy
+              - s3:DeleteBucketPolicy
+              - s3:PutEncryptionConfiguration
+              - s3:PutBucketVersioning
+            Resource: "*"
+          - Sid: WriteAppBuckets
+            Effect: Allow
+            Action:
+              - s3:Get*
+              - s3:List*
+              - s3:CreateBucket
+              - s3:DeleteBucket
+              - s3:PutObject
+              - s3:DeleteObject
+              - s3:PutBucketPolicy
+              - s3:DeleteBucketPolicy
+              - s3:PutEncryptionConfiguration
+              - s3:PutBucketVersioning
+            Resource:
+              - !Sub "arn:aws:s3:::${LambdaService}*"
+
+          # DeployLambdaExecutionRoles
+          - Sid: DeployLambdaExecutionRoles
+            Effect: Allow
+            Action:
+              - iam:Get*
+              - iam:List*
+              - iam:PassRole
+              - iam:CreateRole
+              - iam:DeleteRole
+              - iam:AttachRolePolicy
+              - iam:DeleteRolePolicy
+              - iam:PutRolePolicy
+              - iam:TagRole
+              - iam:UntagRole
+              - iam:DetachRolePolicy
+            Resource:
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${LambdaService}-*"
+
+          # ExecuteCloudFormation
+          - Sid: ValidateCloudFormation
+            Effect: Allow
+            Action:
+              - cloudformation:ValidateTemplate
+              - cloudformation:Describestacks
+              - cloudformation:CreateChangeSet
+              - cloudformation:CreateStack
+              - cloudformation:DeleteChangeSet
+              - cloudformation:DeleteStack
+              - cloudformation:DescribeChangeSet
+              - cloudformation:ExecuteChangeSet
+              - cloudformation:ListStackResources
+              - cloudformation:SetStackPolicy
+              - cloudformation:UpdateStack
+              - cloudformation:UpdateTerminationProtection
+              - cloudformation:GetTemplate
+              - cloudformation:DescribeStackResource
+              - cloudformation:DescribeStackResources
+              - cloudformation:DescribeStackEvents
+            Resource: "*"
+          - Sid: ExecuteCloudFormation
+            Effect: Allow
+            Action:
+              - cloudformation:CreateChangeSet
+              - cloudformation:CreateStack
+              - cloudformation:DeleteChangeSet
+              - cloudformation:DeleteStack
+              - cloudformation:DescribeChangeSet
+              - cloudformation:DescribeStackEvents
+              - cloudformation:DescribeStackResource
+              - cloudformation:DescribeStackResources
+              - cloudformation:DescribeStacks
+              - cloudformation:ExecuteChangeSet
+              - cloudformation:ListStackResources
+              - cloudformation:SetStackPolicy
+              - cloudformation:UpdateStack
+              - cloudformation:UpdateTerminationProtection
+              - cloudformation:GetTemplate
+            Resource:
+              - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${LambdaService}-*"
+          # APIGatewayV2
+          # - Sid: APIGatewayV2
+          #   Effect: Allow
+          #   Action:
+          #     - apigateway:POST
+          #     - apigateway:PUT
+          #     - apigateway:PATCH
+          #     - apigateway:DELETE
+          #     - apigateway:GET
+          #     - apigateway:TagResource
+          #   Resource:
+          #     - !Sub "arn:aws:apigateway:${AWS::Region}::/*"
+        # # Route53
+        #   - Sid: Route53
+        #     Effect: Allow
+        #     Action:
+        #       - route53:ListHostedZones
+        #     Resource: '*'
+        #   - Effect: Allow
+        #     Action:
+        #       - acm:ListCertificates
+        #     Resource: '*'
+        #   - Effect: Allow
+        #     Action:
+        #       - route53:ChangeResourceRecordSets
+        #       - route53:GetHostedZone
+        #       - route53:ListResourceRecordSets
+        #     Resource: !Sub arn:aws:route53:::hostedzone/${HostedZoneId}
+
+  AssetsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: !Sub Assets upload role for ${ProjectName} project
+      RoleName: !Sub ${ProjectName}-assets-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              AWS: !GetAtt AssetsUser.Arn
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalId
+          - Effect: Allow
+            Action:
+              - sts:TagSession
+            Principal:
+              AWS: !GetAtt AssetsUser.Arn
+      ManagedPolicyArns:
+        - !Ref LambdaServicePolicy
+      Tags:
+        - Key: project
+          Value: !Ref ProjectName
+        - Key: stack
+          Value: !Ref AWS::StackName
+
+  AssetsUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub ${ProjectName}-assets-user
+      Tags:
+        - Key: project
+          Value: !Ref ProjectName
+        - Key: stack
+          Value: !Ref AWS::StackName
+
+  AssetsUserAssumeRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-assume-role-policy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+            Resource: !GetAtt AssetsUser.Arn
+      Users:
+        - !Ref AssetsUser
+
+  AssetsUserCFNKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Serial: 1
+      UserName: !Ref AssetsUser
+
+Outputs:
+  AssetsUserAccessKey:
+    Value: !Ref AssetsUserCFNKey
+  AssetsUserSecretKey:
+    Value: !GetAtt AssetsUserCFNKey.SecretAccessKey

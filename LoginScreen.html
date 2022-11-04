@@ -1,0 +1,75 @@
+<div class="container" ng-app="quoddAgreementApp" ng-controller="quoddAgreementController">
+    <div ng-switch="authtype">
+        <div ng-switch-when='0'>
+            <div class="panel panel-primary">
+                <!-- <div class="panel-heading">Welcome to Quodd.com</div> -->
+                <div class="panel-heading">Welcome to {{firmName}}</div>
+                <div class="panel-body">
+                    <div class="text-center">
+                        <p>In order for you to access the platform, we need you to complete the forthcoming exchange Agreements
+                            online which should only take a few minutes.</p>
+                        <h4>THIS IS A ONE-TIME PROCESS</h4>
+                        <br>
+                        <br>
+                        <h5>User Information(*Required Field)</h5>
+                        <form class="form-inline" name="QuoddLoginForm">
+                            <div class="form-group">
+                                <label for="userName">Username:</label>
+                                <input type="text" class="form-control" id="userName" name="userName" placeholder="User Name*" ng-model="userName" autofocus
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-success" ng-click="loginWithUsername(userName)">Login</button>
+                            <br>
+                            <span style="color:red" ng-show="QuoddLoginForm.$submitted && QuoddLoginForm.userName.$error.required">
+                                Please Enter Username</span>
+                        </form>
+                        <!-- <p>(Use The same username as used for <b>Quodd.com</b>)</p> -->
+                        <p>(Use The same username as used for
+                            <b>{{firmName}}</b>)</p>
+                        <br>
+                        <br>
+                        <!-- <p>If you have any questions or need any assistance, please contact Quodd.com at <span class="linkClass">support@quodd.com</span> and someone will get right back to you.</p> -->
+                        <p>If you have any questions or need any assistance, please contact {{firmName}} at
+                            <span class="linkClass">{{firmMail}}</span> and someone will get right back to you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-switch-default>
+            <div class="panel panel-primary">
+                <!-- <div class="panel-heading">Welcome to Quodd.com</div> -->
+                <div class="panel-heading">Welcome to {{firmName}}</div>
+                <div class="panel-body">
+                    <div class="text-center">
+                        <p>In order for you to access the platform, we need you to complete the forthcoming exchange Agreements
+                            online which should only take a few minutes.</p>
+                        <h4>THIS IS A ONE-TIME PROCESS</h4>
+                        <br>
+                        <br>
+                        <h5>Token Information(*Required Field)</h5>
+                        <form class="form-inline" name="QuoddLoginForm">
+                            <div class="form-group">
+                                <label for="token">Token:</label>
+                                <br>
+                                <textarea style="min-width: 280px; resize: none;" class="form-control" rows="5" id="token" name="token" placeholder="Token*"
+                                    ng-model="token" autofocus required></textarea>
+                            </div>
+                            <br>
+                            <br>
+                            <button type="submit" class="btn btn-success" ng-click="loginWithUsername(token)">Login</button>
+                            <br>
+                            <span style="color:red" ng-show="QuoddLoginForm.$submitted && QuoddLoginForm.token.$error.required">
+                                Please Enter Token</span>
+                        </form>
+                        <p>(Use The same token as used for
+                            <b>{{firmName}}</b>)</p>
+                        <br>
+                        <br>
+                        <p>If you have any questions or need any assistance, please contact {{firmName}} at
+                            <span class="linkClass">{{firmMail}}</span> and someone will get right back to you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
