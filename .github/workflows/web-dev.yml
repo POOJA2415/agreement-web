@@ -11,7 +11,7 @@ env:
 
   STATIC_FILES_DIR: build/
   DOMAIN_PREFIX: agreement-web-ui
-  # # CFI: 
+  CFI: EKYV26CH7LB9T 
   
 jobs:
   deploy-dev:
@@ -53,7 +53,7 @@ jobs:
       - name:  deploy
         run: sls deploy --stage dev
 
-      # - name: Invalidation
-      #   shell: bash
-      #   run: |
-      #     aws cloudfront create-invalidation --distribution-id ${{ env.CFI }} --paths "/*" 
+      - name: Invalidation
+        shell: bash
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CFI }} --paths "/*" 
