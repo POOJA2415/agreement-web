@@ -52,7 +52,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: AKIAXJL77BAHDSC6WQX3
-        aws-secret-access-key: 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
+        aws-secret-access-key: Ju73slGcFchsH6wzB4gzT0NxxBh4Yg2ZphBYeQgB
         aws-region: us-east-2
         role-to-assume: agreement-assets-role
         role-external-id: agreement
