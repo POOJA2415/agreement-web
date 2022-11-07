@@ -69,8 +69,4 @@ aws cloudformation delete-stack --stack-name agreement-web-actions-user --region
 
 ## </details>
 
-NOTE: This github action user pattern and cloudformation template is based on:
 
-- https://medium.com/cloud-recipes/configuring-github-actions-to-access-aws-efb9fe13d722
-- https://github.com/antklim/gh-actions-user
-- https://github.com/aws-actions/configure-aws-credentials
