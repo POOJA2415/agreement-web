@@ -1,0 +1,76 @@
+<div class="FixedHeightContainer">
+    <form name="NyseInfoForm">
+        <div class="container" ng-controller="quoddAgreementController">
+            <h5>
+                <span class="glyphicon glyphicon-user"></span> Current User : {{user_name | uppercase}} ( {{firmcode | uppercase}} ) </h5>
+            <div class="scrollThisContent panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">NYSE Agreement Terms And Conditions</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="text-center" style="font-size: 18px; font-weight: bold;">NYSE Terms:</div>
+                    <div class="text-center" style="font-size: 16px; font-weight: bold;">PERSONAL AND EMPLOYMENT DATA-</div> As a prerequisite to qualifying as a non professional Subscriber,
+                    Subscriber shall provide the following information:
+                    <br>
+                    <b>In order to facilitate a decision as to whether Subsciber qualifies as a "Non-professional Subscriber,"Subscriber
+                        shall answer the following questions:</b>
+                    <br>
+                    <br>A. Do you use Market Data solely for your personal, non-business use?
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="NYSEradio1" ng-model="NYSEradio1" value="true" ng-disabled=true>Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="NYSEradio1" ng-model="NYSEradio1" value="false" ng-disabled=true>No</label>
+                    </div>
+                    B. Do you receive Market Data for your business or any other entity?
+                    <br> C. Are you currently registered or qualified with the SEC or CFTC?
+                    <br> D. Are you currently registered or qualified with any securities agency, any securities exchange, association
+                    or regulatory body, or any commodities or futures contract market, association or regulatory body, in
+                    the United States or elsewhere?
+                    <br> E. WHether you are located within or outside of the United States, do you perform any functions that
+                    are similar to those that require an individual to register or qualify with the SEC, the CFTC, any other
+                    securities agency or regulatory body, any securities exchange or association, or any commodities of furtures
+                    contract market, association or regulatory body?
+                    <br> F. Are you engaged to provide investment advice to any individual or entity?
+                    <br> G. Are you engaged as an asset manager?
+                    <br> H. Do you use the capital of any other individual or entity in the conduct of your trading?
+                    <br> I. Do you conduct trading for the benefit of a corporation, partnership, or other entity?
+                    <br> J. Have you entered into any agreement to share the profit of your trading activities or receive compensation
+                    for your trading activities?
+                    <br> K. Are you receiving office space, and equipment or other benefits in exchange for your trading or work
+                    as a financial consultant to any person, firm or business entity?
+                    <br> If any one of the above items is applicable, choose YES below
+                    <br>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="NYSEradio2" ng-model="NYSEradio2" value="true" ng-disabled=true>Yes</label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="NYSEradio2" ng-model="NYSEradio2" value="false" ng-disabled=true>No</label>
+                    </div>
+
+                </div>
+            </div>
+            <br>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="NYSENextStatus" ng-disabled=" (NYSEradio2=='false' && NYSEradio1=='true' ) ?  false : true">I agree to Accept the NYSE Agreement.</label>
+            </div>
+            <div class="form-group">
+                <div style="float: right;">
+                    <button type="submit" class="btn btn-success" ng-click="callAgreementForMarketDataDisplay()" ng-disabled="!NYSENextStatus">
+                        <span class="glyphicon glyphicon-chevron-right"></span>Save and Next</button>
+                </div>
+            </div>
+            <br>
+            <div class="text-center" style="padding-bottom: 5px;">
+                <b>If you have any questions or need any assistance, please contact {{firmName}} at {{firmMail}} and someone
+                    will get right back to you.
+                    <b>
+            </div>
+        </div>
+    </form>
+</div>

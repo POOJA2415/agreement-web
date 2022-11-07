@@ -1,0 +1,259 @@
+<div class="container" ng-controller="quoddAgreementController">
+    <h5>
+        <span class="glyphicon glyphicon-user"></span> Current User : {{user_name | uppercase}} ( {{firmcode | uppercase}} ) </h5>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Subscriber Information</div>
+        <div class="panel-body">
+            <form class="form-horizontal" name="subscriberInfo">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="FirstName">First Name*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" style="width: 50%; display: inline-block;" class="form-control" name="FirstName" id="FirstName" placeholder="Enter First Name"
+                            ng-model="FirstName" autofocus required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.FirstName.$error.required">
+                            Please Provide Your First name</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="LastName">Last Name*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="LastName" id="LastName" placeholder="Enter Last Name"
+                            ng-model="LastName" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.LastName.$error.required">
+                            Please Provide Your Last name</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="AddressLine1">AddressLine1*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="AddressLine1" id="AddressLine1"
+                            placeholder="Enter AddressLine1" ng-model="AddressLine1" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.AddressLine1.$error.required">
+                            Please Enter Address Line1</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="AddressLine2">AddressLine2:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" id="AddressLine2" placeholder="Enter AddressLine2"
+                            ng-model="AddressLine2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="City">City*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="City" id="City" placeholder="Enter City"
+                            ng-model="City" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.City.$error.required">
+                            Please Provide Your City Name</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="State">State/Province*:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="State" name="State" style="width: 50%; display: inline-block;" ng-options="key as value for (key , value) in stateArray"
+                            required>
+                        </select>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.State.$error.required">
+                            Please Select Your State</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="Country">Country*:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" ng-model="Country" name="Country" style="width: 50%; display: inline-block;" ng-options="x for x in countryArray"
+                            required>
+                        </select>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.Country.$error.required">
+                            Please Select Your Country</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="Zip">Zip*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="Zip" id="Zip" placeholder="Enter Zip"
+                            ng-model="Zip" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.Zip.$error.required">
+                            Please Provide Your ZipCode</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="PhoneNumber">Phone Number With Area Code*:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="PhoneNumber" id="PhoneNumber" placeholder="Enter Phone Number"
+                            ng-model="PhoneNumber" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.PhoneNumber.$error.required ">
+                            Please Provide Valid Phone Number With Area Code</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="Email">Email Address*:</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" style="width: 50%; display: inline-block;" name="Email" id="Email" placeholder="Enter Email"
+                            ng-model="Email" required>
+                        <span style="color:red" ng-show="subscriberInfo.$submitted && (subscriberInfo.Email.$error.email || subscriberInfo.Email.$error.required)">
+                            Please Enter Valid Email Address</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-sm-2" style="font-weight: bold;">Retired:</div>
+                    <div class="col-sm-10">
+                        <label class="radio-inline">
+                            <input type="radio" name="RetiredOrEmplyedStatus" ng-model="RetiredOrEmplyedStatus" value="true">Yes
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="RetiredOrEmplyedStatus" ng-model="RetiredOrEmplyedStatus" value="false">No
+                        </label>
+                    </div>
+                </div>
+                <div ng-show="RetiredOrEmplyedStatus==='false'">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Employer">Employer/Other*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" name="Employer" id="Employer" placeholder="Enter Employer"
+                                ng-model="Employer" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.Employer.$error.required">
+                                Please Provide Your First name</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerAddress">Employer Address*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerAddress" id="EmployerAddress"
+                                placeholder="Enter Employer Address" ng-model="EmployerAddress" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmployerAddress.$error.required">
+                                Please Enter Employer Address</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerCity">Employer City*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerCity" id="EmployerCity"
+                                placeholder="Enter Employer City" ng-model="EmployerCity" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmployerCity.$error.required">
+                                Please Provide Your EmployerCity Name</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerState">Employer State/Province*:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" ng-model="EmployerState" name="EmployerState" style="width: 50%; display: inline-block;" ng-options="key as value for (key , value) in stateArray"
+                                required>
+                            </select>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmployerState.$error.required">
+                                Please Select Employer's State</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerCountry">Employer's Country*:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" ng-model="EmployerCountry" name="EmployerCountry" style="width: 50%; display: inline-block;"
+                                ng-options="x for x in countryArray" required>
+                            </select>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmployerCountry.$error.required">
+                                Please Select Employer's Country</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerZip">Employer's Zip*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerZip" id="EmployerZip" placeholder="Enter Employer's Zip"
+                                ng-model="EmployerZip" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmployerZip.$error.required">
+                                Please Provide Employer's ZipCode</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Title">Title and/or Position*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" name="Title" id="Title" placeholder="Enter Title"
+                                ng-model="Title" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.Title.$error.required">
+                                Please Provide Title and/or Position</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmploymentFunctionEmployer">Employment Function (Description)*:</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" name="EmploymentFunctionEmployer" id="EmploymentFunctionEmployer"
+                                placeholder="Enter Employment Function (Description)" ng-model="EmploymentFunctionEmployer" required>
+                            <span style="color:red" ng-show="subscriberInfo.$submitted && subscriberInfo.EmploymentFunctionEmployer.$error.required">
+                                Please Provide Employment Function (Description)</span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="RetiredOrEmplyedStatus==='true'">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Employer">Employer/Other:</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" name="Employer" id="Employer" placeholder="Enter Employer"
+                                ng-model="Employer" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerAddress">Employer Address:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerAddress" id="EmployerAddress"
+                                placeholder="Enter Employer Address" ng-model="EmployerAddress" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerCity">Employer City:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerCity" id="EmployerCity"
+                                placeholder="Enter Employer City" ng-model="EmployerCity" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerState">Employer State/Province:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" ng-model="EmployerState" name="EmployerState" style="width: 50%; display: inline-block;" ng-options="key as value for (key , value) in stateArray"
+                                required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerCountry">Employer's Country:</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" ng-model="EmployerCountry" name="EmployerCountry" style="width: 50%; display: inline-block;"
+                                ng-options="x for x in countryArray" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmployerZip">Employer's Zip:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" style="width: 50%; display: inline-block;" name="EmployerZip" id="EmployerZip" placeholder="Enter Employer's Zip"
+                                ng-model="EmployerZip" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Title">Title and/or Position:</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" id="Title" placeholder="Enter Title" ng-model="Title"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="EmploymentFunctionEmployer">Employment Function (Description):</label>
+                        <div class="col-sm-10">
+                            <input type="text" style="width: 50%; display: inline-block;" class="form-control" id="EmploymentFunctionEmployer" placeholder="Enter Employment Function (Description)"
+                                ng-model="EmploymentFunctionEmployer" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="float: right;margin-right: 20px;">
+                        <button type="submit" class="btn btn-success" ng-click="callAgreementFilledScreen()">
+                            <span class="glyphicon glyphicon-chevron-right"></span> Save and Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="text-center">
+        <b>If you have any questions or need any assistance, please contact {{firmName}} at {{firmMail}} and someone will get
+            right back to you.
+            <b>
+    </div>
+</div>

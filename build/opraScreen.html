@@ -1,0 +1,60 @@
+<div class="FixedHeightContainer">
+    <form name="OpraForm">
+        <div class="container" ng-controller="quoddAgreementController">
+            <h5>
+                <span class="glyphicon glyphicon-user"></span> Current User : {{user_name | uppercase}} ( {{firmcode | uppercase}} ) </h5>
+            <div class="scrollThisContent panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">OPRA Agreement Terms And Conditions</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="text-center" style="font-size: 18px; font-weight: bold" ;>OPRA Terms:</div>
+                    <br>1. You represent and agree that the following statements are and will continue to be true for so long
+                    as you receive OPRA Data as a Nonprofessional:
+                    <br>
+                    <br>(a) You are either a natural person (an individual human being) or a qualifying trust.* You are not a
+                    corporation, partnership, limited liability company, or other form of entity(including any form of trust
+                    that does not qualify as a qualifying trust). If you agree, click on I AGREE:
+                    <br>
+                    <br>(b) If you are a natural person, you shall use the OPRA Data solely in connection with your personal
+                    investment activities and the personal investment activities of your immediate family members** and qualifying
+                    trusts of which you are the trustee or custodian. If you are a qualifying trust, you shall use the OPRA
+                    Data solely in connection with your personal investment activities. In any case, you shall not use the
+                    OPRA Data in connection with any trade, business, professional or other commercial activities. If you
+                    agree, click on I AGREE:
+                    <br>
+                    <br>(c) You are not a Professional. For a natural person who works in the United States,a Professional is
+                    a natural person who is: (i) registered or qualified with the Securities and Exchange Commission, the
+                    Commodities Futures Trading Commission, any state securities agency, any securities exchange/association,
+                    or any commodities/futures contract market/association, (ii) engaged as an investment adviser, as that
+                    term is defined in the Investment Advisers Act of 1940 (whether or not registered or qualified under
+                    that Act); or (iii) employed by a bank or other organization exempt from registration under Federal and/or
+                    state securities laws to perform functions that would require you to be so registered or qualified if
+                    you were to perform such functions for an organization not so exempt. For a natural person who works
+                    outside of the United States, a Professional is a natural person who performs the same functions as someone
+                    who would be considered a Professional in the United States. If you agree that you are not a Professional,
+                    click on I AGREE:
+                    <br>
+                    <br>2. You agree to notify Vendor promptly if your circumstances change such that any of the statements in
+                    Section 1 of this Addendum would no longer be true for you.
+                </div>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="OpraNextStatus">I Agree to Accept the OPRA Agreement</label>
+            </div>
+            <div class="form-group">
+                <div style="float: right;">
+                    <button type="submit" class="btn btn-success" ng-click="callOpraScreenFilled()" ng-disabled="!OpraNextStatus">
+                        <span class="glyphicon glyphicon-chevron-right"></span>Save and Next</button>
+                </div>
+            </div>
+            <br>
+            <div class="text-center" style="padding-bottom: 5px;">
+                <b>If you have any questions or need any assistance, please contact {{firmName}} at {{firmMail}} and someone
+                    will get right back to you.
+                    <b>
+            </div>
+        </div>
+    </form>
+</div>
