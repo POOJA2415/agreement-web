@@ -20,23 +20,19 @@ jobs:
       name: dev      
     defaults:
       run:
-        working-directory:  ./
+        working-directory: ./
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           clean: false
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-
-      # - run: npm install --force
       - run: npm install -g serverless  
       - run: npm install -g serverless-s3-sync
       
-    # - run: npm publish
-    #   env:
-    #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       
           
       - name: Configure AWS credentials
@@ -48,7 +44,7 @@ jobs:
           role-to-assume: agreement-assets-role
           role-external-id: agreement
           role-duration-seconds: 1200
-          role-session-name: agreement-web
+          role-session-name: agreementwebdeploysession
 
       - name:  deploy
         run: sls deploy --stage dev
