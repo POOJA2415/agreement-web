@@ -62,7 +62,7 @@ jobs:
     - name:  deploy
       run: sls deploy --stage dev
 
-    - name: Invalidation
-      shell: bash
-      run: |
-        aws cloudfront create-invalidation --distribution-id ${{ env.CFI }} --paths "/*" 
+    # - name: Invalidation
+    #   shell: bash
+    #   run: |
+    #     aws cloudfront create-invalidation --distribution-id ${{ env.CFI }} --paths "/*" 
