@@ -10,7 +10,7 @@ env:
   DEPLOYMENT_NAME: Agreement-web
 
   STATIC_FILES_DIR: build/
-  # DOMAIN_PREFIX: 
+  DOMAIN_PREFIX: agreement-web-ui
   # # CFI: 
   
 jobs:
