@@ -54,8 +54,8 @@ jobs:
         aws-access-key-id: 
         aws-secret-access-key: 
         aws-region: us-east-2
-        role-to-assume: 
-        role-external-id: 
+        role-to-assume: agreement-assets-role
+        role-external-id: agreement
         role-duration-seconds: 1200
         role-session-name: agreement-web
 
